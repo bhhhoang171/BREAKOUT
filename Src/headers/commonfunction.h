@@ -1,7 +1,6 @@
 #ifndef COMMON_FUNCTION_H
 #define COMMON_FUNCTION_H
 
-#include<windows.h>
 #include<cstdlib>
 #include<ctime>
 #include<string>
