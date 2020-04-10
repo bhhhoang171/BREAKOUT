@@ -5,7 +5,7 @@ Paddle::Paddle()
     PAD_SPEED = 0;
     x_pos = SCREEN_WIDTH/2 - PADDLE_WIDTH/2;
     y_pos = SCREEN_HEIGHT - PADDLE_HEIGHT;
-    x_val = 0;
+    x_spd = 0;
     input_type.right_ = false;
     input_type.left_ = false;
     input_type.space_ = false;
@@ -105,43 +105,43 @@ void Paddle::PadMove()
         x_pos = mouseX - 0.5f*PADDLE_WIDTH;
         if(x_pos + PADDLE_WIDTH >= SCREEN_WIDTH - SIDE_SIZE_X)
         {
-            x_val = 0;
+            x_spd = 0;
             x_pos =  SCREEN_WIDTH - SIDE_SIZE_X - PADDLE_WIDTH;
         }
         if(x_pos <= SIDE_SIZE_X)
         {
-            x_val = 0;
+            x_spd = 0;
             x_pos = SIDE_SIZE_X;
         }
     }
     else
     {
-        x_val = 0;
+        x_spd = 0;
         if(input_type.left_ == true)
         {
-            x_val = -PAD_SPEED;
+            x_spd = -PAD_SPEED;
         }
         else if(input_type.right_ == true)
         {
-            x_val = PAD_SPEED;
+            x_spd = PAD_SPEED;
         }
-        if(x_val < 0)
+        if(x_spd < 0)
         {
             if(x_pos <= SIDE_SIZE_X)
             {
-                x_val = 0;
+                x_spd = 0;
                 x_pos = SIDE_SIZE_X;
             }
         }
-        else if(x_val > 0)
+        else if(x_spd > 0)
         {
             if(x_pos + PADDLE_WIDTH >= SCREEN_WIDTH - SIDE_SIZE_X)
             {
-                x_val = 0;
+                x_spd = 0;
                 x_pos =  SCREEN_WIDTH - SIDE_SIZE_X - PADDLE_WIDTH;
             }
         }
-        x_pos += x_val;
+        x_pos += x_spd;
     }
 }
 

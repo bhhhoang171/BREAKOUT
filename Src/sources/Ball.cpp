@@ -5,8 +5,8 @@ Ball::Ball()
     BALL_SPEED = 0;
     x_pos = SCREEN_WIDTH/2 - BALL_SIZE/2;
     y_pos = SCREEN_HEIGHT - PADDLE_HEIGHT - BALL_SIZE;
-    x_val = 0;
-    y_val = 0;
+    x_spd = 0;
+    y_spd = 0;
     input_type.space_ = false;
     input_type.left_ = false;
     input_type.right_ = false;
@@ -61,8 +61,8 @@ void Ball::BallMove(Paddle* pad, bool& is_quit, Brick_data** brickdata, int& bri
     if(input_type.space_ == true)
     {
         BallCollision(pad, is_quit, brickdata, brickcount);
-        x_pos += x_val;
-        y_pos += y_val;
+        x_pos += x_spd;
+        y_pos += y_spd;
     }
 }
 
@@ -135,15 +135,15 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, int
                     // Top
                 y_pos -= ysize + 0.01f;
                 int fix = abs(padcenter_x - ballcenter_x);
-                if(x_val > 0)
+                if(x_spd > 0)
                 {
-                    x_val = sqrt(2) * BALL_SPEED * cos((75-fix) * PI / 180);
-                    y_val = -sqrt(2) * BALL_SPEED * sin((75-fix) * PI / 180);
+                    x_spd = sqrt(2) * BALL_SPEED * cos((75-fix) * PI / 180);
+                    y_spd = -sqrt(2) * BALL_SPEED * sin((75-fix) * PI / 180);
                 }
                 else
                 {
-                    x_val = -sqrt(2) * BALL_SPEED * cos((75-fix) * PI / 180);
-                    y_val = -sqrt(2) * BALL_SPEED * sin((75-fix) * PI / 180);
+                    x_spd = -sqrt(2) * BALL_SPEED * cos((75-fix) * PI / 180);
+                    y_spd = -sqrt(2) * BALL_SPEED * sin((75-fix) * PI / 180);
                 }
             }
             else
@@ -174,19 +174,19 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, int
     //xu ly cham side
     if(x_pos <= SIDE_SIZE_X)
     {
-        if(x_val < 0) x_val = -x_val;
+        if(x_spd < 0) x_spd = -x_spd;
         return;
     }
     else if(x_pos + BALL_SIZE >= SCREEN_WIDTH - SIDE_SIZE_X)
     {
-        if(x_val > 0) x_val = -x_val;
+        if(x_spd > 0) x_spd = -x_spd;
         return;
     }
 
     //xu ly cham tran
     else if(y_pos <= 0)
     {
-        y_val = -y_val;
+        y_spd = -y_spd;
         return;
     }
 
@@ -296,8 +296,8 @@ void Ball::BallBrickResponse(int dirindex) {
     int mulx = 1;
     int muly = 1;
 
-    if (x_val > 0) {
-        if (y_val > 0) {
+    if (x_spd > 0) {
+        if (y_spd > 0) {
             if (dirindex == 0 || dirindex == 3)
             {
                 mulx = -1;
@@ -307,7 +307,7 @@ void Ball::BallBrickResponse(int dirindex) {
                 muly = -1;
             }
         }
-        else if (y_val < 0)
+        else if (y_spd < 0)
         {
             if (dirindex == 0 || dirindex == 1)
             {
@@ -319,9 +319,9 @@ void Ball::BallBrickResponse(int dirindex) {
             }
         }
     }
-    else if (x_val < 0)
+    else if (x_spd < 0)
     {
-        if (y_val > 0) {
+        if (y_spd > 0) {
             if (dirindex == 2 || dirindex == 3)
             {
                 mulx = -1;
@@ -331,7 +331,7 @@ void Ball::BallBrickResponse(int dirindex) {
                 muly = -1;
             }
         }
-        else if (y_val < 0)
+        else if (y_spd < 0)
         {
             if (dirindex == 1 || dirindex == 2)
             {
@@ -343,8 +343,8 @@ void Ball::BallBrickResponse(int dirindex) {
             }
         }
     }
-    x_val *= mulx;
-    y_val *= muly;
+    x_spd *= mulx;
+    y_spd *= muly;
     return;
 }
 

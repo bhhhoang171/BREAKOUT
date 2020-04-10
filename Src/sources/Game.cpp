@@ -192,8 +192,8 @@ void SetDifficulty(Paddle* pad, Ball* ball, bool& choosecontrol, bool& started)
                         choosecontrol = true;
                         pad->PAD_SPEED = 2;
                         ball->BALL_SPEED = 1.5;
-                        ball->x_val = ball->BALL_SPEED;
-                        ball->y_val = -ball->BALL_SPEED;
+                        ball->x_spd = ball->BALL_SPEED;
+                        ball->y_spd = -ball->BALL_SPEED;
                         ChooseControl(pad, choosecontrol, started);
                         return;
                     }
@@ -206,8 +206,8 @@ void SetDifficulty(Paddle* pad, Ball* ball, bool& choosecontrol, bool& started)
                         choosecontrol = true;
                         pad->PAD_SPEED = 2.5;
                         ball->BALL_SPEED = 2;
-                        ball->x_val = ball->BALL_SPEED;
-                        ball->y_val = -ball->BALL_SPEED;
+                        ball->x_spd = ball->BALL_SPEED;
+                        ball->y_spd = -ball->BALL_SPEED;
                         ChooseControl(pad, choosecontrol, started);
                         return;
                     }
@@ -220,8 +220,8 @@ void SetDifficulty(Paddle* pad, Ball* ball, bool& choosecontrol, bool& started)
                         choosecontrol = true;
                         pad->PAD_SPEED = 3;
                         ball->BALL_SPEED = 2.5;
-                        ball->x_val = ball->BALL_SPEED;
-                        ball->y_val = -ball->BALL_SPEED;
+                        ball->x_spd = ball->BALL_SPEED;
+                        ball->y_spd = -ball->BALL_SPEED;
                         ChooseControl(pad, choosecontrol, started);
                         return;
                     }

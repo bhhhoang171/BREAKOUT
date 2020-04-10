@@ -15,14 +15,11 @@ public:
     void Show(SDL_Renderer* des);
     void PadReset();
     void HandleInputAction(SDL_Event event, SDL_Renderer* screen);
-    //kiem tra di cham side
     void PadMove();
     float PAD_SPEED;
     Input input_type;
 private:
-    //di chuyen ngang
-    float x_val;
-    //vi tri
+    float x_spd;
     float x_pos;
     float y_pos;
 };

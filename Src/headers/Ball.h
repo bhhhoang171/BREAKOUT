@@ -20,8 +20,8 @@ public:
     float BALL_SPEED;
     float x_pos;
     float y_pos;
-    float x_val;
-    float y_val;
+    float x_spd;
+    float y_spd;
     Input input_type;
 };
 
