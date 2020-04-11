@@ -154,7 +154,7 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, int
                     x_pos -= xsize + 0.01f;
                     pad->input_type.left_ = false;
                     pad->input_type.right_ = false;
-                    BallBrickResponse(0);
+                    BallBrickResponse('L');
                     return;
                 }
                 else
@@ -163,7 +163,7 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, int
                     x_pos += xsize + 0.01f;
                     pad->input_type.right_ = false;
                     pad->input_type.left_ = false;
-                    BallBrickResponse(2);
+                    BallBrickResponse('R');
                     return;
                 }
             }
@@ -260,13 +260,13 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, int
                             {
                                 // Bottom
                                 y_pos += ysize + 0.01f;
-                                BallBrickResponse(3);
+                                BallBrickResponse('B');
                             }
                             else
                             {
                                 // Top
                                 y_pos -= ysize + 0.01f;
-                                BallBrickResponse(1);
+                                BallBrickResponse('T');
                             }
                         }
                         else
@@ -275,13 +275,13 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, int
                             {
                                 // Left
                                 x_pos -= xsize + 0.01f;
-                                BallBrickResponse(0);
+                                BallBrickResponse('L');
                             }
                             else
                             {
                                 // Right
                                 x_pos += xsize + 0.01f;
-                                BallBrickResponse(2);
+                                BallBrickResponse('R');
                             }
                         }
                     }
@@ -291,60 +291,55 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, int
     }
 }
 
-void Ball::BallBrickResponse(int dirindex) {
-
-    int mulx = 1;
-    int muly = 1;
-
+void Ball::BallBrickResponse(const char direction)
+{
     if (x_spd > 0) {
         if (y_spd > 0) {
-            if (dirindex == 0 || dirindex == 3)
+            if (direction == 'L' || direction == 'B')
             {
-                mulx = -1;
+                x_spd = -x_spd;
             }
             else
             {
-                muly = -1;
+                y_spd = -y_spd;
             }
         }
         else if (y_spd < 0)
         {
-            if (dirindex == 0 || dirindex == 1)
+            if (direction == 'L' || direction == 'T')
             {
-                mulx = -1;
+                x_spd = -x_spd;
             }
             else
             {
-                muly = -1;
+                y_spd = -y_spd;
             }
         }
     }
     else if (x_spd < 0)
     {
         if (y_spd > 0) {
-            if (dirindex == 2 || dirindex == 3)
+            if (direction == 'R' || direction == 'B')
             {
-                mulx = -1;
+                x_spd = -x_spd;
             }
             else
             {
-                muly = -1;
+                y_spd = -y_spd;
             }
         }
         else if (y_spd < 0)
         {
-            if (dirindex == 1 || dirindex == 2)
+            if (direction == 'T' || direction == 'R')
             {
-                mulx = -1;
+                x_spd = -x_spd;
             }
             else
             {
-                muly = -1;
+                y_spd = -y_spd;
             }
         }
     }
-    x_spd *= mulx;
-    y_spd *= muly;
     return;
 }
 

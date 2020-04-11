@@ -16,7 +16,7 @@ public:
     void BallReset();
     void BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, int& brickcount);
     void HandleInputAction(SDL_Event event, SDL_Renderer* screen);
-    void BallBrickResponse(int dirindex);
+    void BallBrickResponse(const char direction);
     float BALL_SPEED;
     float x_pos;
     float y_pos;
