@@ -17,12 +17,12 @@ Paddle::~Paddle()
 
 }
 
-void Paddle::Show(SDL_Renderer* des)
+void Paddle::Show(SDL_Renderer* screen)
 {
     rect_.x = x_pos;
     rect_.y = y_pos;
     SDL_Rect renderquad = {rect_.x, rect_.y, PADDLE_WIDTH, PADDLE_HEIGHT};
-    SDL_RenderCopy(des, p_object, nullptr, &renderquad);
+    SDL_RenderCopy(screen, p_object, nullptr, &renderquad);
 }
 
 void Paddle::PadReset()

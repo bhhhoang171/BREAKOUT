@@ -1,6 +1,7 @@
 #ifndef COMMON_FUNCTION_H
 #define COMMON_FUNCTION_H
 
+#include<iostream>
 #include<cstdlib>
 #include<ctime>
 #include<string>
@@ -13,8 +14,6 @@ static SDL_Window* g_window = nullptr;
 static SDL_Renderer* g_screen = nullptr;
 static SDL_Event g_event;
 
-
-const int FRAME_PER_SECOND = 200;
 //SCREEN
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
@@ -27,11 +26,12 @@ const int SCREEN_HEIGHT = 600;
 #define SIDE_SIZE_X 16
 #define SIDE_SIZE_Y 600
 
+#define FRAME_PER_SECOND  200
 #define PI 3.14159265
 
 //do lon 1 brick
-static int BRICK_SIZE_X = 64;
-static int BRICK_SIZE_Y = 24;
+static int BRICK_WIDTH = 64;
+static int BRICK_HEIGHT = 24;
 
 static int PADDLE_WIDTH = 100;
 static int PADDLE_HEIGHT = 24;

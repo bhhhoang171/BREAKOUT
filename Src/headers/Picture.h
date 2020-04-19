@@ -1,4 +1,3 @@
-
 #ifndef PICTURE_H
 #define PICTURE_H
 
@@ -11,10 +10,7 @@ public:
     ~Picture();
     void SetposRect(const int& x, const int& y) { rect_.x = x; rect_.y = y; }
     void SetsizeRect(const int& w, const int& h) { rect_.w = w; rect_.h = h;}
-    SDL_Rect GetRect() const { return rect_; }
-    SDL_Texture* GetObject() const { return p_object; }
-
-    bool LoadImg(std::string path, SDL_Renderer* screen);
+    void LoadImg(std::string path, SDL_Renderer* screen);
     void Render(SDL_Renderer* des, const SDL_Rect* clip = nullptr);
     void Free();
 protected:

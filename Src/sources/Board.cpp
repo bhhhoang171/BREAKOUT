@@ -1,6 +1,5 @@
 #include"Board.h"
 
-
 Board::Board()
 {
     brickpic = new Brick_pic [4];
@@ -32,8 +31,8 @@ void Board::LoadBoard()
         for(int j = 0 ; j < MAX_BRICK_X; ++j)
         {
             brickdata[i][j].tile = rand() % 4 + 1;
-            brickdata[i][j].x_pos = SIDE_SIZE_X + j*BRICK_SIZE_X;
-            brickdata[i][j].y_pos = i*BRICK_SIZE_Y;
+            brickdata[i][j].x_pos = SIDE_SIZE_X + j*BRICK_WIDTH;
+            brickdata[i][j].y_pos = i*BRICK_HEIGHT;
         }
     }
 }
@@ -44,7 +43,6 @@ void Board::Loadtile(SDL_Renderer* screen)
     for(int i = 0; i < 4; ++i)
     {
         file_img[15] = char(i+49);
-
         brickpic[i].LoadImg(file_img, screen);
     }
 

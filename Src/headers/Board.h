@@ -1,7 +1,5 @@
-
 #ifndef BOARD_H
 #define BOARD_H
-
 #include"commonfunction.h"
 #include"Picture.h"
 
@@ -12,7 +10,7 @@ public:
     ~Brick_pic() {;}
 };
 
-class Brick_data //Map
+class Brick_data
 {
 public:
     Brick_data() {;}
@@ -37,7 +35,6 @@ public:
     void Reset();
 private:
     Brick_pic* brickpic;
-
 };
 
 

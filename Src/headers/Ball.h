@@ -11,23 +11,20 @@ class Ball : public Picture
 public:
     Ball();
     ~Ball();
-    void ShowBall(SDL_Renderer* des);
+    float BALL_SPEED;
+    float x_spd;
+    float y_spd;
+    Input input_type;
+    void ShowBall(SDL_Renderer* screen);
     void BallMove(Paddle* pad, bool& is_quit, Brick_data** brickdata, int& brickcount);
     void BallReset();
     void BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, int& brickcount);
     void HandleInputAction(SDL_Event event, SDL_Renderer* screen);
-    void BallBrickResponse(const char direction);
-    float BALL_SPEED;
+    void BallResponse(const char direction);
+private:
     float x_pos;
     float y_pos;
-    float x_spd;
-    float y_spd;
-    Input input_type;
 };
-
-
-
-
 
 
 #endif // BALL_H
