@@ -81,12 +81,14 @@ void Board::DrawBoard(SDL_Renderer* screen)
     }
 }
 
-void Board::DrawBoard1(SDL_Renderer* screen)
+void Board::DrawBoard1(SDL_Renderer* screen, const Picture& ball, const Picture& pad)
 {
     int frame = 12;
     while(frame > 1)
     {
         backgroundboard.Render(screen);
+        ball.Render(screen);
+        pad.Render(screen);
         for(int i = 0; i < 23; ++i)
         {
             for(int j = 0; j < MAX_BRICK_X; ++j)
@@ -94,30 +96,30 @@ void Board::DrawBoard1(SDL_Renderer* screen)
                 switch(brickdata[i][j].state)
                 {
                 case 1:
-                    brickpic.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos - frame*4);
+                    brickpic.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos - frame*2);
                     brickpic.Render(screen);
                     break;
                 case 2:
-                    ice.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos - frame*4);
+                    ice.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos - frame*2);
                     ice.Render(screen);
                     break;
                 case 3:
-                    bomb.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos - frame*4);
+                    bomb.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos - frame*2);
                     bomb.Render(screen);
                     break;
                 case 4:
-                    arrowhor.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos - frame*4);
+                    arrowhor.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos - frame*2);
                     arrowhor.Render(screen);
                     break;
                 case 5:
-                    arrowver.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos - frame*4);
+                    arrowver.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos - frame*2);
                     arrowver.Render(screen);
                     break;
                 }
             }
         }
         frame--;
-        SDL_Delay(10);
+        SDL_Delay(20);
         SDL_RenderPresent(screen);
     }
 }
@@ -245,43 +247,40 @@ void Board::Explosion(const int& row, const int& col, Audio* audio)
         return;
 }
 
-void Board::Updateboard(SDL_Renderer* screen)
+void Board::Updateboard(SDL_Renderer* screen, const Picture& ball, const Picture& pad)
 {
     if(brickcount < 80)
     {
-        brickcount += 24;
-        for(int i = 22; i > 1; --i)
+        brickcount += 12;
+        for(int i = 22; i > 0; --i)
         {
             for(int j = 0; j < MAX_BRICK_X; ++j)
             {
-                brickdata[i][j].state = brickdata[i-2][j].state;
+                brickdata[i][j].state = brickdata[i-1][j].state;
             }
         }
-        for(int i = 0; i < 2; ++i)
+        for(int j = 0; j < MAX_BRICK_X; ++j)
         {
-            for(int j = 0; j < MAX_BRICK_X; ++j)
+            int r = rand() % 30;
+            if(r == 2 || r == 6 || r == 10 || r == 14 || r == 13)
             {
-                int r = rand() % 30;
-                if(r == 2 || r == 6 || r == 10 || r == 14 || r == 13)
-                {
-                    brickdata[i][j].state = 2;
-                }
-                else if(r == 3 || r == 5)
-                {
-                    brickdata[i][j].state = 3;
-                }
-                else if(r == 1)
-                {
-                    brickdata[i][j].state = 4;
-                }
-                else if(r == 0)
-                {
-                    brickdata[i][j].state = 5;
-                }
-                else brickdata[i][j].state = 1;
+                brickdata[0][j].state = 2;
             }
+            else if(r == 3 || r == 5)
+            {
+                brickdata[0][j].state = 3;
+            }
+            else if(r == 1)
+            {
+                brickdata[0][j].state = 4;
+            }
+            else if(r == 0)
+            {
+                brickdata[0][j].state = 5;
+            }
+            else brickdata[0][j].state = 1;
         }
-        DrawBoard1(screen);
+        DrawBoard1(screen, ball, pad);
     }
 }
 

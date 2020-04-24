@@ -16,6 +16,8 @@ public:
     float x_spd;
     float y_spd;
     bool input_space;
+    float Getxpos() const {return x_pos;}
+    float Getypos() const {return y_pos;}
     void ShowBall(SDL_Renderer* screen);
     void BallMove(Paddle* pad, bool& is_quit, Brick_data** brickdata, Board* board, Audio* audio, int& life);
     void BallReset();

@@ -29,9 +29,9 @@ public:
     void LoadBoard();
     void Loadtile(SDL_Renderer* screen);
     void DrawBoard(SDL_Renderer* screen);
-    void DrawBoard1(SDL_Renderer* screen);
+    void DrawBoard1(SDL_Renderer* screen, const Picture& ball, const Picture& pad);
     void Explosion(const int& row, const int& col, Audio* audio);
-    void Updateboard(SDL_Renderer* screen);
+    void Updateboard(SDL_Renderer* screen, const Picture& ball, const Picture& pad);
     void Reset();
     void Renderbackground(SDL_Renderer* screen) const
     {

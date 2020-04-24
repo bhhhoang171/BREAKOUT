@@ -38,6 +38,8 @@ void PictureLib::FreePictureLib()
     messagebox.Free();
     no.Free();
     yes.Free();
+    ball_.Free();
+    pad_.Free();
 }
 
 void PictureLib::LoadPictureLib(SDL_Renderer* screen)
@@ -108,4 +110,7 @@ void PictureLib::LoadPictureLib(SDL_Renderer* screen)
     yes.SetposRect(315, 354);
     no.LoadImg("data/pics/no.png", screen);
     no.SetposRect(442, 354);
+
+    ball_.LoadImg("data/pics/ball.png", screen);
+    pad_.LoadImg("data/pics/paddle.png", screen);
 }

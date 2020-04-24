@@ -166,6 +166,7 @@ void ChooseControl()
                     if(g_event.button.button == SDL_BUTTON_LEFT)
                     {
                         Control(false);
+                        life += 2;
                         return;
                     }
                 }
@@ -451,7 +452,9 @@ void Game()
     g_text.Render(g_screen, 885, 11);
     g_text.Freettf();
 
-    board->Updateboard(g_screen);
+    pictures->ball_.SetposRect(ball->Getxpos(), ball->Getypos());
+    pictures->pad_.SetposRect(pad->Getxpos(), pad->Getypos());
+    board->Updateboard(g_screen, pictures->ball_, pictures->pad_);
     board->DrawBoard(g_screen);
     if(!paused)
     {
@@ -635,7 +638,6 @@ void MessageBox()
         g_text.LoadText(g_font, g_screen);
         g_text.Render(g_screen, 885, 11);
         g_text.Freettf();
-        board->Updateboard(g_screen);
         board->DrawBoard(g_screen);
         ball->ShowBall(g_screen);
         pad->Show(g_screen);

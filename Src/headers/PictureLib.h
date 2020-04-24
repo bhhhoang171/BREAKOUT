@@ -37,6 +37,8 @@ public:
     Picture yes;
     Picture no;
     Picture messagebox;
+    Picture ball_;
+    Picture pad_;
 };
 
 #endif
