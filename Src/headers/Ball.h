@@ -2,9 +2,10 @@
 #define BALL_H
 
 #include"commonfunction.h"
-#include"Picture.h"
+#include"Graphic.h"
 #include"Paddle.h"
 #include"Board.h"
+#include"Audio.h"
 
 class Ball : public Picture
 {
@@ -14,13 +15,13 @@ public:
     float BALL_SPEED;
     float x_spd;
     float y_spd;
-    Input input_type;
+    bool input_space;
     void ShowBall(SDL_Renderer* screen);
-    void BallMove(Paddle* pad, bool& is_quit, Brick_data** brickdata, int& brickcount);
+    void BallMove(Paddle* pad, bool& is_quit, Brick_data** brickdata, Board* board, Audio* audio, int& life);
     void BallReset();
-    void BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, int& brickcount);
-    void HandleInputAction(SDL_Event event, SDL_Renderer* screen);
-    void BallResponse(const char direction);
+    void BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Board* board, Audio* audio, int& life);
+    void HandleInputAction(SDL_Event& event, SDL_Renderer* screen, Mix_Chunk* chunk);
+    void BallResponse(const char& direction);
 private:
     float x_pos;
     float y_pos;

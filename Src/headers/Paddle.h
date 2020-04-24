@@ -2,20 +2,22 @@
 #define PADDLE_H
 
 #include"commonfunction.h"
-#include"Picture.h"
+#include"Graphic.h"
 
 class Paddle : public Picture
 {
 public:
     Paddle();
     ~Paddle();
-    float Getxpos() {return x_pos;}
-    float Getypos() {return y_pos;}
+    float Getxpos() const {return x_pos;}
+    float Getypos() const {return y_pos;}
     float PAD_SPEED;
-    Input input_type;
+    bool input_left;
+    bool input_right;
+    bool input_mouse;
     void Show(SDL_Renderer* screen);
     void PadReset();
-    void HandleInputAction(SDL_Event event, SDL_Renderer* screen);
+    void HandleInputAction(SDL_Event& event, SDL_Renderer* screen);
     void PadMove();
 private:
     float x_spd;

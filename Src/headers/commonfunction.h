@@ -1,14 +1,18 @@
 #ifndef COMMON_FUNCTION_H
 #define COMMON_FUNCTION_H
 
+#include<fstream>
 #include<iostream>
 #include<cstdlib>
 #include<ctime>
 #include<string>
 #include<cstring>
+#include<vector>
 #include<cmath>
 #include<SDL.h>
 #include<SDL_image.h>
+#include<SDL_mixer.h>
+#include<SDL_ttf.h>
 
 static SDL_Window* g_window = nullptr;
 static SDL_Renderer* g_screen = nullptr;
@@ -37,17 +41,6 @@ static int PADDLE_WIDTH = 100;
 static int PADDLE_HEIGHT = 24;
 
 static int BALL_SIZE = 24;
-
-typedef struct Input
-{
-    bool left_;
-    bool right_;
-    bool space_;
-    bool mouse_;
-}Input;
-
-
-
 
 #endif // COMMON_FUNCTION_H
 
