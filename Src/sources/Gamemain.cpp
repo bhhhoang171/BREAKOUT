@@ -76,6 +76,14 @@ void InitData()
         SDL_Quit();
         exit(1);
     }
+    SDL_Surface* icon = IMG_Load("data/pics/windowicon.png");
+    if(!icon)
+    {
+        std::cout << "Load Window Icon Error: " << IMG_GetError() << std::endl;
+        SDL_Quit();
+        exit(1);
+    }
+    SDL_SetWindowIcon(g_window, icon);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 }
 

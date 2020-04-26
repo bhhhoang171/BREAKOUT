@@ -189,9 +189,9 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Boa
     //Ball Brick collision
     int col = (x_pos - SIDE_SIZE_X) / BRICK_WIDTH;
     int row = y_pos / BRICK_HEIGHT;
-    for(int i = -1; i < 2; i++)
+    for(int i = 0; i < 2; i++)
     {
-        for(int j = -1; j < 2; j++)
+        for(int j = 0; j < 2; j++)
         {
             if(row+i >= 0 && col+j >= 0
             && row+i < MAX_BRICK_Y && col+j < 12)
