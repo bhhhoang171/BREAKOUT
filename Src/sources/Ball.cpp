@@ -22,12 +22,10 @@ void Ball::BallReset()
     input_space = false;
 }
 
-void Ball::ShowBall(SDL_Renderer* screen)
+void Ball::ShowBall(SDL_Renderer* screen, Picture& ball_)
 {
-    rect_.x = x_pos;
-    rect_.y = y_pos;
-    SDL_Rect renderquad = {rect_.x, rect_.y, BALL_SIZE, BALL_SIZE};
-    SDL_RenderCopy(screen, texture, nullptr, &renderquad);
+    ball_.SetposRect(x_pos, y_pos);
+    ball_.Render(screen);
 }
 
 
@@ -189,93 +187,99 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Boa
     }
 
     //Ball Brick collision
-    for(int i = 0; i < 23; i++)
+    int col = (x_pos - SIDE_SIZE_X) / BRICK_WIDTH;
+    int row = y_pos / BRICK_HEIGHT;
+    for(int i = -1; i < 2; i++)
     {
-        for(int j = 0; j < MAX_BRICK_X; j++)
+        for(int j = -1; j < 2; j++)
         {
-            if (brickdata[i][j].state > 0)
+            if(row+i >= 0 && col+j >= 0
+            && row+i < MAX_BRICK_Y && col+j < 12)
             {
-                float brickcenter_x = brickdata[i][j].x_pos + 0.5f*BRICK_WIDTH;
-                float brickcenter_y = brickdata[i][j].y_pos + 0.5f*BRICK_HEIGHT;
-
-                if (x_pos <= brickdata[i][j].x_pos + BRICK_WIDTH &&
-                    x_pos + BALL_SIZE >= brickdata[i][j].x_pos &&
-                    y_pos <= brickdata[i][j].y_pos + BRICK_HEIGHT &&
-                    y_pos + BALL_SIZE >= brickdata[i][j].y_pos)
+                if (brickdata[row+i][col+j].state > 0)
                 {
-                    board->Explosion(i, j, audio);
-                    float ymin = 0;
-                    if (brickdata[i][j].y_pos > y_pos)
-                    {
-                        ymin = brickdata[i][j].y_pos;
-                    }
-                    else
-                    {
-                        ymin = y_pos;
-                    }
+                    float brickcenter_x = brickdata[row+i][col+j].x_pos + 0.5f*BRICK_WIDTH;
+                    float brickcenter_y = brickdata[row+i][col+j].y_pos + 0.5f*BRICK_HEIGHT;
 
-                    float ymax = 0;
-                    if (brickdata[i][j].y_pos + BRICK_HEIGHT < y_pos + BALL_SIZE)
+                    if (x_pos <= brickdata[row+i][col+j].x_pos + BRICK_WIDTH &&
+                        x_pos + BALL_SIZE >= brickdata[row+i][col+j].x_pos &&
+                        y_pos <= brickdata[row+i][col+j].y_pos + BRICK_HEIGHT &&
+                        y_pos + BALL_SIZE >= brickdata[row+i][col+j].y_pos)
                     {
-                        ymax = brickdata[i][j].y_pos + BRICK_HEIGHT;
-                    }
-                    else
-                    {
-                        ymax = y_pos + BALL_SIZE;
-                    }
-
-                    float ysize = ymax - ymin;
-
-                    float xmin = 0;
-                    if (brickdata[i][j].x_pos > x_pos)
-                    {
-                        xmin = brickdata[i][j].x_pos;
-                    }
-                    else
-                    {
-                        xmin = x_pos;
-                    }
-
-                    float xmax = 0;
-                    if (brickdata[i][j].x_pos + BRICK_WIDTH < x_pos + BALL_SIZE)
-                    {
-                        xmax = brickdata[i][j].x_pos + BRICK_WIDTH;
-                    }
-                    else
-                    {
-                        xmax = x_pos + BALL_SIZE;
-                    }
-
-                    float xsize = xmax - xmin;
-
-                    if (xsize > ysize)
-                    {
-                        if (ballcenter_y > brickcenter_y)
+                        board->Explosion(row+i, col+j, audio);
+                        float ymin = 0;
+                        if (brickdata[row+i][col+j].y_pos > y_pos)
                         {
-                            // Bottom
-                            y_pos += ysize + 0.01f;
-                            BallResponse('B');
+                            ymin = brickdata[row+i][col+j].y_pos;
                         }
                         else
                         {
-                            // Top
-                            y_pos -= ysize + 0.01f;
-                            BallResponse('T');
+                            ymin = y_pos;
                         }
-                    }
-                    else
-                    {
-                        if (ballcenter_x < brickcenter_x)
+
+                        float ymax = 0;
+                        if (brickdata[row+i][col+j].y_pos + BRICK_HEIGHT < y_pos + BALL_SIZE)
                         {
-                            // Left
-                            x_pos -= xsize + 0.01f;
-                            BallResponse('L');
+                            ymax = brickdata[row+i][col+j].y_pos + BRICK_HEIGHT;
                         }
                         else
                         {
-                            // Right
-                            x_pos += xsize + 0.01f;
-                            BallResponse('R');
+                            ymax = y_pos + BALL_SIZE;
+                        }
+
+                        float ysize = ymax - ymin;
+
+                        float xmin = 0;
+                        if (brickdata[row+i][col+j].x_pos > x_pos)
+                        {
+                            xmin = brickdata[row+i][col+j].x_pos;
+                        }
+                        else
+                        {
+                            xmin = x_pos;
+                        }
+
+                        float xmax = 0;
+                        if (brickdata[row+i][col+j].x_pos + BRICK_WIDTH < x_pos + BALL_SIZE)
+                        {
+                            xmax = brickdata[row+i][col+j].x_pos + BRICK_WIDTH;
+                        }
+                        else
+                        {
+                            xmax = x_pos + BALL_SIZE;
+                        }
+
+                        float xsize = xmax - xmin;
+
+                        if (xsize > ysize)
+                        {
+                            if (ballcenter_y > brickcenter_y)
+                            {
+                                // Bottom
+                                y_pos += ysize + 0.01f;
+                                BallResponse('B');
+                            }
+                            else
+                            {
+                                // Top
+                                y_pos -= ysize + 0.01f;
+                                BallResponse('T');
+                            }
+                        }
+                        else
+                        {
+                            if (ballcenter_x < brickcenter_x)
+                            {
+                                // Left
+                                x_pos -= xsize + 0.01f;
+                                BallResponse('L');
+                            }
+                            else
+                            {
+                                // Right
+                                x_pos += xsize + 0.01f;
+                                BallResponse('R');
+                            }
                         }
                     }
                 }

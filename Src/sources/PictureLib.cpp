@@ -112,5 +112,7 @@ void PictureLib::LoadPictureLib(SDL_Renderer* screen)
     no.SetposRect(442, 354);
 
     ball_.LoadImg("data/pics/ball.png", screen);
+    ball_.SetsizeRect(BALL_SIZE, BALL_SIZE);
     pad_.LoadImg("data/pics/paddle.png", screen);
+    pad_.SetsizeRect(PADDLE_WIDTH, PADDLE_HEIGHT);
 }

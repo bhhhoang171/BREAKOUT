@@ -32,7 +32,7 @@ bool tut = false;
 bool message = false;
 
 void InitData();
-void logSDLError(const std::string &msg, bool fatal = false);
+void logSDLError(const std::string &msg, const bool& fatal = false);
 void LoadGUI();
 void close();
 void SetDifficulty();

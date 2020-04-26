@@ -79,7 +79,7 @@ void InitData()
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 }
 
-void logSDLError(const std::string &msg, bool fatal)
+void logSDLError(const std::string &msg, const bool& fatal)
 {
     std::cout << msg << " Error: " << SDL_GetError() << std::endl;
     if(fatal)
@@ -96,8 +96,6 @@ void LoadGUI()
     ball = new Ball;
     board->LoadBoard();
     board->Loadtile(g_screen);
-    pad->LoadImg("data/pics/paddle.png", g_screen);
-    ball->LoadImg("data/pics/ball.png", g_screen);
     audio = new Audio;
     audio->LoadAudio();
     pictures = new PictureLib;
@@ -240,7 +238,7 @@ void SetDifficulty()
                 {
                     if(g_event.button.button == SDL_BUTTON_LEFT)
                     {
-                        Difficulty(2, 1.5, 7, 12, 5, 5, 10, 3);
+                        Difficulty(2.5, 2, 7, 12, 5, 5, 10, 3);
                         return;
                     }
                 }
@@ -249,7 +247,7 @@ void SetDifficulty()
                 {
                     if(g_event.button.button == SDL_BUTTON_LEFT)
                     {
-                        Difficulty(2.5, 2, 6, 15, 4, 4, 20, 2);
+                        Difficulty(3, 2.5, 6, 15, 4, 4, 20, 2);
                         return;
                     }
                 }
@@ -258,12 +256,12 @@ void SetDifficulty()
                 {
                     if(g_event.button.button == SDL_BUTTON_LEFT)
                     {
-                        Difficulty(3, 2.5, 5, 18, 3, 3, 30, 1);
+                        Difficulty(3.5, 3, 5, 18, 3, 3, 30, 1);
                         return;
                     }
                 }
                 else if(mouseX >= 10 && mouseY >= 262
-                && mouseX <= 209 && mouseY <= 338);
+                && mouseX <= 209 && mouseY <= 338)
                 {
                     if(g_event.button.button == SDL_BUTTON_LEFT)
                     {
@@ -335,6 +333,7 @@ void LoadTutorial()
                 {
                     tut = false;
                     SetDifficulty();
+                    return;
                 }
             }
         }
@@ -380,7 +379,7 @@ void Game()
         is_quit = true;
     for(int i = 0; i < MAX_BRICK_X; ++i)
     {
-        if(board->brickdata[22][i].state > 0)
+        if(board->brickdata[MAX_BRICK_Y - 1][i].state > 0)
         {
             is_quit = true;
             break;
@@ -463,8 +462,8 @@ void Game()
         ball->BallMove(pad, is_quit, board->brickdata, board, audio, life);
     }
     else pictures->start.Render(g_screen);
-    ball->ShowBall(g_screen);
-    pad->Show(g_screen);
+    ball->ShowBall(g_screen, pictures->ball_);
+    pad->ShowPaddle(g_screen, pictures->pad_);
 }
 
 void PlayAgain()
@@ -492,7 +491,7 @@ void PlayAgain()
                     is_quit = false;
                     win = false;
                     board->LoadBoard();
-                    board->brickcount = MAX_BRICK_X * MAX_BRICK_Y;
+                    board->brickcount = MAX_BRICK_X * MAX_BRICK_RESET_Y;
                     board->point = 0;
                     pad->PadReset();
                     ball->BallReset();
@@ -585,7 +584,7 @@ void MessageBox()
                         started = false;
                         choosecontrol = false;
                         board->LoadBoard();
-                        board->brickcount = MAX_BRICK_X * MAX_BRICK_Y;
+                        board->brickcount = MAX_BRICK_X * MAX_BRICK_RESET_Y;
                         board->point = 0;
                         pad->PadReset();
                         ball->BallReset();
@@ -639,8 +638,8 @@ void MessageBox()
         g_text.Render(g_screen, 885, 11);
         g_text.Freettf();
         board->DrawBoard(g_screen);
-        ball->ShowBall(g_screen);
-        pad->Show(g_screen);
+        ball->ShowBall(g_screen, pictures->ball_);
+        pad->ShowPaddle(g_screen, pictures->pad_);
         pictures->messagebox.Render(g_screen);
         if(g_event.motion.x >= 315 && g_event.motion.y >= 354
         && g_event.motion.x <= 355 && g_event.motion.y <= 370)

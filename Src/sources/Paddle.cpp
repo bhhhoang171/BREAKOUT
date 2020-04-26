@@ -16,12 +16,10 @@ Paddle::~Paddle()
 
 }
 
-void Paddle::Show(SDL_Renderer* screen)
+void Paddle::ShowPaddle(SDL_Renderer* screen, Picture& pad_)
 {
-    rect_.x = x_pos;
-    rect_.y = y_pos;
-    SDL_Rect renderquad = {rect_.x, rect_.y, PADDLE_WIDTH, PADDLE_HEIGHT};
-    SDL_RenderCopy(screen, texture, nullptr, &renderquad);
+    pad_.SetposRect(x_pos, y_pos);
+    pad_.Render(screen);
 }
 
 void Paddle::PadReset()

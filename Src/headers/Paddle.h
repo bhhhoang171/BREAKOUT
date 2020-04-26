@@ -4,7 +4,7 @@
 #include"commonfunction.h"
 #include"Graphic.h"
 
-class Paddle : public Picture
+class Paddle
 {
 public:
     Paddle();
@@ -15,7 +15,7 @@ public:
     bool input_left;
     bool input_right;
     bool input_mouse;
-    void Show(SDL_Renderer* screen);
+    void ShowPaddle(SDL_Renderer* screen, Picture& pad_);
     void PadReset();
     void HandleInputAction(SDL_Event& event, SDL_Renderer* screen);
     void PadMove();

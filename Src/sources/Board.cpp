@@ -7,7 +7,7 @@ Board::Board()
     {
         brickdata[i] = new Brick_data [MAX_BRICK_X];
     }
-    brickcount = MAX_BRICK_X * MAX_BRICK_Y;
+    brickcount = MAX_BRICK_X * MAX_BRICK_RESET_Y;
     bombcount = 0;
     icecount = 0;
     horcount = 0;
@@ -130,7 +130,7 @@ void Board::Reset()
     {
         for(int j = 0; j < MAX_BRICK_X; ++j)
         {
-            if(i >= MAX_BRICK_Y)
+            if(i >= MAX_BRICK_RESET_Y)
             {
                  brickdata[i][j].state = 0;
             }
@@ -252,7 +252,7 @@ void Board::Updateboard(SDL_Renderer* screen, const Picture& ball, const Picture
     if(brickcount < 80)
     {
         brickcount += 12;
-        for(int i = 22; i > 0; --i)
+        for(int i = MAX_BRICK_Y - 1; i > 0; --i)
         {
             for(int j = 0; j < MAX_BRICK_X; ++j)
             {

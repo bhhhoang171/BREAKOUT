@@ -7,7 +7,7 @@
 #include"Board.h"
 #include"Audio.h"
 
-class Ball : public Picture
+class Ball
 {
 public:
     Ball();
@@ -18,7 +18,7 @@ public:
     bool input_space;
     float Getxpos() const {return x_pos;}
     float Getypos() const {return y_pos;}
-    void ShowBall(SDL_Renderer* screen);
+    void ShowBall(SDL_Renderer* screen, Picture& ball_);
     void BallMove(Paddle* pad, bool& is_quit, Brick_data** brickdata, Board* board, Audio* audio, int& life);
     void BallReset();
     void BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Board* board, Audio* audio, int& life);
