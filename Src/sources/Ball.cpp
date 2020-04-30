@@ -172,17 +172,22 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Boa
     //Ball Side collision
     if(x_pos <= SIDE_SIZE_X)
     {
-        if(x_spd < 0) x_spd = -x_spd;
+        x_pos = SIDE_SIZE_X + 0.01f;
+        if(x_spd < 0)
+            BallResponse('R');
         return;
     }
     else if(x_pos + BALL_SIZE >= SCREEN_WIDTH - SIDE_SIZE_X)
     {
-        if(x_spd > 0) x_spd = -x_spd;
+        x_pos = SCREEN_WIDTH - SIDE_SIZE_X - BALL_SIZE - 0.01f;
+        if(x_spd > 0)
+            BallResponse('L');
         return;
     }
     else if(y_pos <= 0)
     {
-        y_spd = -y_spd;
+        y_pos = 0.01f;
+        BallResponse('B');
         return;
     }
 
@@ -206,6 +211,7 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Boa
                         y_pos <= brickdata[row+i][col+j].y_pos + BRICK_HEIGHT &&
                         y_pos + BALL_SIZE >= brickdata[row+i][col+j].y_pos)
                     {
+                        ++doublecollision;
                         board->Explosion(row+i, col+j, audio);
                         float ymin = 0;
                         if (brickdata[row+i][col+j].y_pos > y_pos)
