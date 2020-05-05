@@ -211,7 +211,6 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Boa
                         y_pos <= brickdata[row+i][col+j].y_pos + BRICK_HEIGHT &&
                         y_pos + BALL_SIZE >= brickdata[row+i][col+j].y_pos)
                     {
-                        ++doublecollision;
                         board->Explosion(row+i, col+j, audio);
                         float ymin = 0;
                         if (brickdata[row+i][col+j].y_pos > y_pos)
