@@ -35,16 +35,15 @@ void InitData();
 void logSDLError(const std::string &msg, const bool& fatal = false);
 void LoadGUI();
 void close();
+void Menu();
 void SetDifficulty();
 void Difficulty(const float& padspeed, const float& ballspeed,
                 const int& bomb, const int& ice,
                 const int& horarr, const int& verarr,
                 const int& mul_, const int& life_);
-void LoadTutorial();
 void ChooseControl();
 void Control(const bool& mouse);
 void PlayAgain();
-void MessageBox();
 void Game();
 
 #endif

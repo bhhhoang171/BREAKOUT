@@ -30,7 +30,7 @@ static SDL_Event g_event;
 #define SIDE_SIZE_X 16
 #define SIDE_SIZE_Y 600
 
-#define FRAME_PER_SECOND  200
+#define FRAME_PER_SECOND  120
 #define PI 3.14159265
 
 //do lon 1 brick

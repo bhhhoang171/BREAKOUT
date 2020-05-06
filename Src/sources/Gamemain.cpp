@@ -2,15 +2,23 @@
 
 int main(int argc, char* argv[])
 {
+    srand(time(0));
     InitData();
     LoadGUI();
-    SetDifficulty();
+    Menu();
 
-    srand(time(0));
     unsigned int time = 0;
     while(true)
     {
         time = SDL_GetTicks();
+        SDL_SetRenderDrawColor(g_screen, 255, 255, 255, 255);
+        SDL_RenderClear(g_screen);
+        pictures->g_background.Render(g_screen);
+        pictures->sidepic.SetposRect(0, 0);
+        pictures->sidepic.Render(g_screen);
+        pictures->sidepic.SetposRect(SCREEN_WIDTH - SIDE_SIZE_X, 0);
+        pictures->sidepic.Render(g_screen);
+        board->Renderbackground(g_screen);
         if(is_quit)
         {
             PlayAgain();
@@ -18,7 +26,35 @@ int main(int argc, char* argv[])
             fp >> highscore;
             fp.close();
         }
-        else Game();
+        else
+        {
+            Game();
+            if(is_quit) continue;
+        }
+
+        pictures->heart.Render(g_screen);
+        g_text.SetColor(255, 255, 255);
+        g_text.Settext("Your score:");
+        g_text.LoadText(g_font, g_screen);
+        g_text.Render(g_screen, 830, 300);
+        g_text.Freettf();
+        g_text.Settext("High score:");
+        g_text.LoadText(g_font, g_screen);
+        g_text.Render(g_screen, 830, 100);
+        g_text.Freettf();
+        g_text.Settext(std::to_string(board->point*mul));
+        g_text.LoadText(g_font, g_screen);
+        g_text.Render(g_screen, 870, 330);
+        g_text.Freettf();
+        g_text.Settext(std::to_string(highscore*10));
+        g_text.LoadText(g_font, g_screen);
+        g_text.Render(g_screen, 870, 130);
+        g_text.Freettf();
+        g_text.Settext("x" + std::to_string(life));
+        g_text.LoadText(g_font, g_screen);
+        g_text.Render(g_screen, 885, 11);
+        g_text.Freettf();
+
         SDL_RenderPresent(g_screen);
         int real_time = SDL_GetTicks() - time;
         int time_one_frame = 1000/FRAME_PER_SECOND;
@@ -141,70 +177,16 @@ void close()
     SDL_Quit();
 }
 
-void ChooseControl()
+void Menu()
 {
-    int mouseX = 0, mouseY = 0;
     unsigned int time = 0;
-    while(choosecontrol && !started)
+    while(!started)
     {
         time = SDL_GetTicks();
-        if(SDL_WaitEvent(&g_event) != 0)
-        {
-            if(g_event.type == SDL_QUIT)
-            {
-                close();
-                exit(0);
-            }
-            else if(g_event.type == SDL_KEYDOWN)
-            {
-                if(g_event.key.keysym.sym = SDLK_ESCAPE)
-                {
-                    choosecontrol = false;
-                    SetDifficulty();
-                }
-            }
-            else if(g_event.type == SDL_MOUSEBUTTONDOWN)
-            {
-                SDL_GetMouseState(&mouseX, &mouseY);
-                if(mouseX >= 100 && mouseY >= 175
-                && mouseX <= 412 && mouseY <= 425)
-                {
-                    if(g_event.button.button == SDL_BUTTON_LEFT)
-                    {
-                        Control(false);
-                        life += 2;
-                        return;
-                    }
-                }
-                else if(mouseX >= 600 && mouseY >= 175
-                && mouseX <= 840 && mouseY <= 425)
-                {
-                    if(g_event.button.button == SDL_BUTTON_LEFT)
-                    {
-                        Control(true);
-                        return;
-                    }
-                }
-            }
-        }
-        pictures->menu.Render(g_screen);
-        if(g_event.motion.x >= 100 && g_event.motion.y >= 175
-        && g_event.motion.x <= 412 && g_event.motion.y <= 425)
-        {
-            pictures->keyboard1.Render(g_screen);
-        }
-        else pictures->keyboard.Render(g_screen);
-        if(g_event.motion.x >= 600 && 175
-        && g_event.motion.x <= 840 && g_event.motion.y <= 425)
-        {
-            pictures->mouse1.Render(g_screen);
-        }
-        else pictures->mouse.Render(g_screen);
-        g_text.Settext("Choose Control");
-        g_text.SetColor(255, 255, 0);
-        g_text.LoadText(g_font, g_screen);
-        g_text.Render(g_screen, 10, 550);
-        g_text.Freettf();
+        SDL_SetRenderDrawColor(g_screen, 255, 255, 255, 255);
+        SDL_RenderClear(g_screen);
+        if(!choosecontrol) SetDifficulty();
+        else ChooseControl();
         SDL_RenderPresent(g_screen);
         int real_time = SDL_GetTicks() - time;
         int time_one_frame = 1000/FRAME_PER_SECOND;
@@ -214,6 +196,67 @@ void ChooseControl()
             SDL_Delay(delay_time);
         }
     }
+}
+
+void ChooseControl()
+{
+    if(SDL_WaitEvent(&g_event) != 0)
+    {
+        if(g_event.type == SDL_QUIT)
+        {
+            close();
+            exit(0);
+        }
+        else if(g_event.type == SDL_KEYDOWN)
+        {
+            if(g_event.key.keysym.sym = SDLK_ESCAPE)
+            {
+                choosecontrol = false;
+                SetDifficulty();
+                return;
+            }
+        }
+        else if(g_event.type == SDL_MOUSEBUTTONDOWN)
+        {
+            if(g_event.motion.x >= 100 && g_event.motion.y >= 175
+            && g_event.motion.x <= 412 && g_event.motion.y <= 425)
+            {
+                if(g_event.button.button == SDL_BUTTON_LEFT)
+                {
+                    Control(false);
+                    life += 2;
+                    return;
+                }
+            }
+            else if(g_event.motion.x >= 600 && g_event.motion.y >= 175
+            && g_event.motion.x <= 840 && g_event.motion.y <= 425)
+            {
+                if(g_event.button.button == SDL_BUTTON_LEFT)
+                {
+                    Control(true);
+                    return;
+                }
+            }
+        }
+    }
+    pictures->menu.Render(g_screen);
+    if(g_event.motion.x >= 100 && g_event.motion.y >= 175
+    && g_event.motion.x <= 412 && g_event.motion.y <= 425)
+    {
+        pictures->keyboard1.Render(g_screen);
+    }
+    else pictures->keyboard.Render(g_screen);
+    if(g_event.motion.x >= 600 && 175
+    && g_event.motion.x <= 840 && g_event.motion.y <= 425)
+    {
+        pictures->mouse1.Render(g_screen);
+    }
+    else pictures->mouse.Render(g_screen);
+    g_text.Settext("Choose Control");
+    g_text.SetColor(255, 255, 0);
+    g_text.LoadText(g_font, g_screen);
+    g_text.Render(g_screen, 10, 550);
+    g_text.Freettf();
 }
 
 void Control(const bool& mouse)
@@ -226,61 +269,68 @@ void Control(const bool& mouse)
 
 void SetDifficulty()
 {
-    int mouseX = 0, mouseY = 0;
-    unsigned int time = 0;
-    while(!choosecontrol)
+    if(SDL_WaitEvent(&g_event) != 0)
     {
-        time = SDL_GetTicks();
-        if(SDL_WaitEvent(&g_event) != 0)
+        if(g_event.type == SDL_QUIT)
         {
-            if(g_event.type == SDL_QUIT)
+            close();
+            exit(0);
+        }
+        else if(!tut)
+        {
+            if(g_event.type == SDL_MOUSEBUTTONDOWN)
             {
-                close();
-                exit(0);
-            }
-            else if(g_event.type == SDL_MOUSEBUTTONDOWN)
-            {
-                SDL_GetMouseState(&mouseX, &mouseY);
-                if(mouseX >= 250 && mouseY >= SCREEN_HEIGHT/2 - 162
-                && mouseX <= 500 && mouseY <= SCREEN_HEIGHT/2 - 78)
+                if(g_event.motion.x >= 250 && g_event.motion.y >= SCREEN_HEIGHT/2 - 162
+                && g_event.motion.x <= 500 && g_event.motion.y <= SCREEN_HEIGHT/2 - 78)
                 {
                     if(g_event.button.button == SDL_BUTTON_LEFT)
                     {
-                        Difficulty(2.5, 2, 7, 12, 5, 5, 10, 3);
+                        Difficulty(3, 2.5, 7, 12, 5, 5, 10, 3);
                         return;
                     }
                 }
-                else if(mouseX >= (SCREEN_WIDTH+200)/2 - 125 && mouseY >= SCREEN_HEIGHT/2 - 42
-                && mouseX <= (SCREEN_WIDTH+200)/2 + 125 && mouseY <= SCREEN_HEIGHT/2 + 42)
+                else if(g_event.motion.x >= (SCREEN_WIDTH+200)/2 - 125 && g_event.motion.y >= SCREEN_HEIGHT/2 - 42
+                && g_event.motion.x <= (SCREEN_WIDTH+200)/2 + 125 && g_event.motion.y <= SCREEN_HEIGHT/2 + 42)
                 {
                     if(g_event.button.button == SDL_BUTTON_LEFT)
                     {
-                        Difficulty(3, 2.5, 6, 15, 4, 4, 20, 2);
+                        Difficulty(3.5, 3, 6, 15, 4, 4, 20, 2);
                         return;
                     }
                 }
-                else if(mouseX >= 500 && mouseY >= SCREEN_HEIGHT/2 + 78
-                && mouseX <= 750 && mouseY <= SCREEN_HEIGHT/2 + 162)
+                else if(g_event.motion.x >= 500 && g_event.motion.y >= SCREEN_HEIGHT/2 + 78
+                && g_event.motion.x <= 750 && g_event.motion.y <= SCREEN_HEIGHT/2 + 162)
                 {
                     if(g_event.button.button == SDL_BUTTON_LEFT)
                     {
-                        Difficulty(3.5, 3, 5, 18, 3, 3, 30, 1);
+                        Difficulty(4, 3.5, 5, 18, 3, 3, 30, 1);
                         return;
                     }
                 }
-                else if(mouseX >= 10 && mouseY >= 262
-                && mouseX <= 209 && mouseY <= 338)
+                else if(g_event.motion.x >= 10 && g_event.motion.y >= 262
+                && g_event.motion.x <= 209 && g_event.motion.y <= 338)
                 {
                     if(g_event.button.button == SDL_BUTTON_LEFT)
                     {
                         Mix_PlayChannel(-1, audio->menu_tick, 0);
                         tut = true;
-                        LoadTutorial();
-                        return;
                     }
                 }
             }
         }
+        else
+        {
+            if(g_event.type == SDL_KEYDOWN)
+            {
+                if(g_event.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    tut = false;
+                }
+            }
+        }
+    }
+    if(tut) pictures->tutorial.Render(g_screen);
+    else {
         pictures->menu.Render(g_screen);
         if(g_event.motion.x >= 250 && g_event.motion.y >= SCREEN_HEIGHT/2 - 162
         && g_event.motion.x <= 500 && g_event.motion.y <= SCREEN_HEIGHT/2 - 78)
@@ -311,49 +361,6 @@ void SetDifficulty()
         g_text.LoadText(g_font, g_screen);
         g_text.Render(g_screen, 10, 550);
         g_text.Freettf();
-        SDL_RenderPresent(g_screen);
-        int real_time = SDL_GetTicks() - time;
-        int time_one_frame = 1000/FRAME_PER_SECOND; //ms
-        if(real_time < time_one_frame)
-        {
-            int delay_time = time_one_frame - real_time;
-            SDL_Delay(delay_time);
-        }
-    }
-}
-
-void LoadTutorial()
-{
-    unsigned int time = 0;
-    while(tut)
-    {
-        time = SDL_GetTicks();
-        if(SDL_WaitEvent(&g_event) != 0)
-        {
-            if(g_event.type == SDL_QUIT)
-            {
-                close();
-                exit(0);
-            }
-            else if(g_event.type == SDL_KEYDOWN)
-            {
-                if(g_event.key.keysym.sym == SDLK_ESCAPE)
-                {
-                    tut = false;
-                    SetDifficulty();
-                    return;
-                }
-            }
-        }
-        pictures->tutorial.Render(g_screen);
-        SDL_RenderPresent(g_screen);
-        int real_time = SDL_GetTicks() - time;
-        int time_one_frame = 1000/FRAME_PER_SECOND; //ms
-        if(real_time < time_one_frame)
-        {
-            int delay_time = time_one_frame - real_time;
-            SDL_Delay(delay_time);
-        }
     }
 }
 
@@ -382,15 +389,22 @@ void Difficulty(const float& padspeed, const float& ballspeed,
 void Game()
 {
     if(board->brickcount == 0)
+    {
         is_quit = true;
+        board->point += 1000;
+        return;
+    }
     if(life == 0)
+    {
         is_quit = true;
+        return;
+    }
     for(int i = 0; i < MAX_BRICK_X; ++i)
     {
         if(board->brickdata[MAX_BRICK_Y - 1][i].state > 0)
         {
             is_quit = true;
-            break;
+            return;
         }
     }
     while(SDL_PollEvent(&g_event) != 0)
@@ -399,70 +413,79 @@ void Game()
         {
             exit(0);
         }
-        else if(g_event.type == SDL_KEYDOWN)
+        else if(!message)
         {
-            if(g_event.key.keysym.sym == SDLK_p)
+            if(g_event.type == SDL_KEYDOWN)
             {
-                paused = true;
-                break;
+                if(g_event.key.keysym.sym == SDLK_p)
+                {
+                    paused = true;
+                    break;
+                }
+                else if(g_event.key.keysym.sym == SDLK_SPACE)
+                {
+                    paused = false;
+                }
+                else if(g_event.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    message = true;
+                    paused = true;
+                }
             }
-            else if(g_event.key.keysym.sym == SDLK_SPACE)
+            else if(g_event.type == SDL_MOUSEBUTTONDOWN)
             {
-                paused = false;
+                if(g_event.button.button == SDL_BUTTON_LEFT)
+                {
+                    paused = false;
+                }
             }
-            else if(g_event.key.keysym.sym == SDLK_ESCAPE)
+            pad->HandleInputAction(g_event, g_screen);
+            ball->HandleInputAction(g_event, g_screen, audio->menu_tick);
+        }
+        else
+        {
+            if(g_event.type == SDL_MOUSEBUTTONDOWN)
             {
-                message = true;
-                MessageBox();
-                return;
+                if(g_event.motion.x >= 315 && g_event.motion.y >= 354
+                && g_event.motion.x <= 355 && g_event.motion.y <= 370)
+                {
+                    if(g_event.button.button == SDL_BUTTON_LEFT)
+                    {
+                        message = false;
+                        Mix_PlayChannel(-1, audio->menu_tick, 0);
+                        paused = false;
+                        started = false;
+                        choosecontrol = false;
+                        board->LoadBoard();
+                        board->brickcount = MAX_BRICK_X * MAX_BRICK_RESET_Y;
+                        board->point = 0;
+                        pad->PadReset();
+                        ball->BallReset();
+                        musicplaying = false;
+                        is_quit = false;
+                        win = false;
+                        Menu();
+                        return;
+                    }
+                }
+                else if(g_event.motion.x >= 442 && g_event.motion.y >= 354
+                     && g_event.motion.x <= 472 && g_event.motion.y <= 370)
+                {
+                    if(g_event.button.button == SDL_BUTTON_LEFT)
+                    {
+                        Mix_PlayChannel(-1, audio->menu_tick, 0);
+                        message = false;
+                    }
+                }
             }
         }
-        else if(g_event.type == SDL_MOUSEBUTTONDOWN)
-        {
-            if(g_event.button.button == SDL_BUTTON_LEFT)
-            {
-                paused = false;
-            }
-        }
-        pad->HandleInputAction(g_event, g_screen);
-        ball->HandleInputAction(g_event, g_screen, audio->menu_tick);
     }
-    SDL_SetRenderDrawColor(g_screen, 255, 255, 255, 255);
-    SDL_RenderClear(g_screen);
-
-    pictures->g_background.Render(g_screen);
-    pictures->sidepic.SetposRect(0, 0);
-    pictures->sidepic.Render(g_screen);
-    pictures->sidepic.SetposRect(SCREEN_WIDTH - SIDE_SIZE_X, 0);
-    pictures->sidepic.Render(g_screen);
-    board->Renderbackground(g_screen);
-    pictures->heart.Render(g_screen);
-    g_text.SetColor(255, 255, 255);
-    g_text.Settext("Your score:");
-    g_text.LoadText(g_font, g_screen);
-    g_text.Render(g_screen, 830, 300);
-    g_text.Freettf();
-    g_text.Settext("High score:");
-    g_text.LoadText(g_font, g_screen);
-    g_text.Render(g_screen, 830, 100);
-    g_text.Freettf();
-    g_text.Settext(std::to_string(board->point*mul));
-    g_text.LoadText(g_font, g_screen);
-    g_text.Render(g_screen, 870, 330);
-    g_text.Freettf();
-    g_text.Settext(std::to_string(highscore*10));
-    g_text.LoadText(g_font, g_screen);
-    g_text.Render(g_screen, 870, 130);
-    g_text.Freettf();
-    g_text.Settext("x" + std::to_string(life));
-    g_text.LoadText(g_font, g_screen);
-    g_text.Render(g_screen, 885, 11);
-    g_text.Freettf();
-
     pictures->ball_.SetposRect(ball->Getxpos(), ball->Getypos());
     pictures->pad_.SetposRect(pad->Getxpos(), pad->Getypos());
     board->Updateboard(g_screen, pictures->ball_, pictures->pad_);
     board->DrawBoard(g_screen);
+    ball->ShowBall(g_screen, pictures->ball_);
+    pad->ShowPaddle(g_screen, pictures->pad_);
     if(!paused)
     {
         pictures->pause.Render(g_screen);
@@ -470,13 +493,24 @@ void Game()
         ball->BallMove(pad, is_quit, board->brickdata, board, audio, life);
     }
     else pictures->start.Render(g_screen);
-    ball->ShowBall(g_screen, pictures->ball_);
-    pad->ShowPaddle(g_screen, pictures->pad_);
+    if(message)
+    {
+        pictures->messagebox.Render(g_screen);
+        if(g_event.motion.x >= 315 && g_event.motion.y >= 354
+        && g_event.motion.x <= 355 && g_event.motion.y <= 370)
+        {
+            pictures->yes.Render(g_screen);
+        }
+        if(g_event.motion.x >= 442 && g_event.motion.y >= 354
+        && g_event.motion.x <= 472 && g_event.motion.y <= 370)
+        {
+            pictures->no.Render(g_screen);
+        }
+    }
 }
 
 void PlayAgain()
 {
-    int mouseX = 0, mouseY = 0;
     while(SDL_PollEvent(&g_event) != 0)
     {
         if(g_event.type == SDL_QUIT)
@@ -486,16 +520,14 @@ void PlayAgain()
         }
         else if(g_event.type == SDL_MOUSEBUTTONDOWN)
         {
-            SDL_GetMouseState(&mouseX, &mouseY);
-            if(mouseX >= SCREEN_WIDTH/2 - 70 && mouseY >= SCREEN_HEIGHT/2 + 40
-            && mouseX <= SCREEN_WIDTH/2 + 70 && mouseY <= SCREEN_HEIGHT/2 + 110)
+            if(g_event.motion.x >= SCREEN_WIDTH/2 - 70 && g_event.motion.y >= SCREEN_HEIGHT/2 + 40
+            && g_event.motion.x <= SCREEN_WIDTH/2 + 70 && g_event.motion.y <= SCREEN_HEIGHT/2 + 110)
             {
                 if(g_event.button.button == SDL_BUTTON_LEFT)
                 {
                     Mix_PlayChannel(-1, audio->menu_tick, 0);
                     started = false;
                     choosecontrol = false;
-                    SetDifficulty();
                     is_quit = false;
                     win = false;
                     board->LoadBoard();
@@ -504,6 +536,7 @@ void PlayAgain()
                     pad->PadReset();
                     ball->BallReset();
                     musicplaying = false;
+                    Menu();
                     return;
                 }
             }
@@ -516,12 +549,7 @@ void PlayAgain()
         fp.close();
     }
     if(board->point*mul/10 > highscore) win = true;
-    pictures->g_background.Render(g_screen);
-    pictures->sidepic.SetposRect(0, 0);
-    pictures->sidepic.Render(g_screen);
-    pictures->sidepic.SetposRect(SCREEN_WIDTH - SIDE_SIZE_X, 0);
-    pictures->sidepic.Render(g_screen);
-    board->Renderbackground(g_screen);
+
     if(win)
     {
         if(!musicplaying)
@@ -548,120 +576,8 @@ void PlayAgain()
         pictures->again1.Render(g_screen);
     }
     else pictures->again.Render(g_screen);
-    g_text.SetColor(255, 255, 255);
-    g_text.Settext("Your score:");
-    g_text.LoadText(g_font, g_screen);
-    g_text.Render(g_screen, 830, 300);
-    g_text.Freettf();
-    g_text.Settext("High score:");
-    g_text.LoadText(g_font, g_screen);
-    g_text.Render(g_screen, 830, 100);
-    g_text.Freettf();
-    g_text.Settext(std::to_string(board->point*mul));
-    g_text.LoadText(g_font, g_screen);
-    g_text.Render(g_screen, 870, 330);
-    g_text.Freettf();
-    g_text.Settext(std::to_string(highscore*10));
-    g_text.LoadText(g_font, g_screen);
-    g_text.Render(g_screen, 870, 130);
-    g_text.Freettf();
 }
 
-void MessageBox()
-{
-    int mouseX, mouseY;
-    while(message)
-    {
-        if(SDL_WaitEvent(&g_event) != 0)
-        {
-            if(g_event.type == SDL_QUIT)
-            {
-                close();
-                exit(0);
-            }
-            else if(g_event.type == SDL_MOUSEBUTTONDOWN)
-            {
-                SDL_GetMouseState(&mouseX, &mouseY);
-                if(mouseX >= 315 && mouseY >= 354
-                && mouseX <= 355 && mouseY <= 370)
-                {
-                    if(g_event.button.button == SDL_BUTTON_LEFT)
-                    {
-                        Mix_PlayChannel(-1, audio->menu_tick, 0);
-                        paused = false;
-                        started = false;
-                        choosecontrol = false;
-                        board->LoadBoard();
-                        board->brickcount = MAX_BRICK_X * MAX_BRICK_RESET_Y;
-                        board->point = 0;
-                        pad->PadReset();
-                        ball->BallReset();
-                        musicplaying = false;
-                        is_quit = false;
-                        win = false;
-                        SetDifficulty();
-                        return;
-                    }
-                }
-                else if(mouseX >= 442 && mouseY >= 354
-                     && mouseX <= 472 && mouseY <= 370)
-                {
-                    if(g_event.button.button == SDL_BUTTON_LEFT)
-                    {
-                        Mix_PlayChannel(-1, audio->menu_tick, 0);
-                        message = false;
-                        paused = true;
-                        return;
-                    }
-                }
-            }
-        }
-        pictures->g_background.Render(g_screen);
-        pictures->sidepic.SetposRect(0, 0);
-        pictures->sidepic.Render(g_screen);
-        pictures->sidepic.SetposRect(SCREEN_WIDTH - SIDE_SIZE_X, 0);
-        pictures->sidepic.Render(g_screen);
-        board->Renderbackground(g_screen);
-        pictures->heart.Render(g_screen);
-
-        g_text.SetColor(255, 255, 255);
-        g_text.Settext("Your score:");
-        g_text.LoadText(g_font, g_screen);
-        g_text.Render(g_screen, 830, 300);
-        g_text.Freettf();
-        g_text.Settext("High score:");
-        g_text.LoadText(g_font, g_screen);
-        g_text.Render(g_screen, 830, 100);
-        g_text.Freettf();
-        g_text.Settext(std::to_string(board->point*mul));
-        g_text.LoadText(g_font, g_screen);
-        g_text.Render(g_screen, 870, 330);
-        g_text.Freettf();
-        g_text.Settext(std::to_string(highscore*10));
-        g_text.LoadText(g_font, g_screen);
-        g_text.Render(g_screen, 870, 130);
-        g_text.Freettf();
-        g_text.Settext("x" + std::to_string(life));
-        g_text.LoadText(g_font, g_screen);
-        g_text.Render(g_screen, 885, 11);
-        g_text.Freettf();
-        board->DrawBoard(g_screen);
-        ball->ShowBall(g_screen, pictures->ball_);
-        pad->ShowPaddle(g_screen, pictures->pad_);
-        pictures->messagebox.Render(g_screen);
-        if(g_event.motion.x >= 315 && g_event.motion.y >= 354
-        && g_event.motion.x <= 355 && g_event.motion.y <= 370)
-        {
-            pictures->yes.Render(g_screen);
-        }
-        if(g_event.motion.x >= 442 && g_event.motion.y >= 354
-        && g_event.motion.x <= 472 && g_event.motion.y <= 370)
-        {
-            pictures->no.Render(g_screen);
-        }
-        SDL_RenderPresent(g_screen);
-    }
-}
 
 
 
