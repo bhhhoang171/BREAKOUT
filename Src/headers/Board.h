@@ -26,6 +26,7 @@ public:
     int horcount;
     int vercount;
     long long point;
+    bool update;
     void LoadBoard();
     void Loadtile(SDL_Renderer* screen);
     void DrawBoard(SDL_Renderer* screen);

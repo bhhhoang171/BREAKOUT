@@ -69,6 +69,7 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Boa
     float ballcenter_x = x_pos + 0.5f*BALL_SIZE;
     float ballcenter_y = y_pos + 0.5f*BALL_SIZE;
     //Ball Paddle collision
+    board->update = false;
     if(y_pos >= SCREEN_HEIGHT - PADDLE_HEIGHT - BALL_SIZE)
     {
         float padcenter_x = pad->Getxpos() + 0.5f*PADDLE_WIDTH;
@@ -87,6 +88,7 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Boa
             y_pos <= pad->Getypos() + PADDLE_HEIGHT &&
             y_pos + BALL_SIZE >= pad->Getypos())
         {
+            board->update = true;
             float ymin = 0;
             if (pad->Getypos() > y_pos)
             {
@@ -145,6 +147,7 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Boa
                     x_spd = -sqrt(2) * BALL_SPEED * cos((75-fix) * PI / 180);
                     y_spd = -sqrt(2) * BALL_SPEED * sin((75-fix) * PI / 180);
                 }
+                return;
             }
             else
             {

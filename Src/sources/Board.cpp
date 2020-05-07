@@ -249,8 +249,9 @@ void Board::Explosion(const int& row, const int& col, Audio* audio)
 
 void Board::Updateboard(SDL_Renderer* screen, const Picture& ball, const Picture& pad)
 {
-    if(brickcount < 80)
+    if(brickcount < 80 && update == true)
     {
+        update = false;
         brickcount += 12;
         for(int i = MAX_BRICK_Y - 1; i > 0; --i)
         {
