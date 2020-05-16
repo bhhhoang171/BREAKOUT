@@ -209,7 +209,7 @@ void ChooseControl()
         }
         else if(g_event.type == SDL_KEYDOWN)
         {
-            if(g_event.key.keysym.sym = SDLK_ESCAPE)
+            if(g_event.key.keysym.sym == SDLK_ESCAPE)
             {
                 choosecontrol = false;
                 SetDifficulty();
