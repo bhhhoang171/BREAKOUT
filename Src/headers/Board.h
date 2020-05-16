@@ -19,6 +19,9 @@ class Board
 public:
     Board();
     ~Board();
+    enum bricks {
+        NORMAL = 1, ICE = 2, BOMB = 3, HORIZONTAL_ARROW = 4, VERTICAL_ARROW = 5
+    };
     Brick_data** brickdata;
     int brickcount;
     int bombcount;

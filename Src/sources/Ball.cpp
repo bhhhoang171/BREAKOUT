@@ -56,7 +56,7 @@ void Ball::BallMove(Paddle* pad, bool& is_quit, Brick_data** brickdata, Board* b
         x_pos = pad->Getxpos() + PADDLE_WIDTH/2 - BALL_SIZE/2;
         y_pos = pad->Getypos() - BALL_SIZE;
     }
-    if(input_space == true)
+    else
     {
         BallCollision(pad, is_quit, brickdata, board, audio, life);
         x_pos += x_spd;
@@ -89,53 +89,53 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Boa
             y_pos + BALL_SIZE >= pad->Getypos())
         {
             board->update = true;
-            float ymin = 0;
+            float y_low = 0;
             if (pad->Getypos() > y_pos)
             {
-                ymin = pad->Getypos();
+                y_low = pad->Getypos();
             }
             else
             {
-                ymin = y_pos;
+                y_low = y_pos;
             }
-            float ymax = 0;
+            float y_high = 0;
             if (pad->Getypos() + PADDLE_HEIGHT < y_pos + BALL_SIZE)
             {
-                ymax = pad->Getypos() + PADDLE_HEIGHT;
+                y_high = pad->Getypos() + PADDLE_HEIGHT;
             }
             else
             {
-                ymax = y_pos + BALL_SIZE;
+                y_high = y_pos + BALL_SIZE;
             }
 
-            float ysize = ymax - ymin;
+            float y_size = y_high - y_low;
 
-            float xmin = 0;
+            float x_low = 0;
             if (pad->Getxpos() > x_pos)
             {
-                xmin = pad->Getxpos();
+                x_low = pad->Getxpos();
             }
             else
             {
-                xmin = x_pos;
+                x_low = x_pos;
             }
 
-            float xmax = 0;
+            float x_high = 0;
             if (pad->Getxpos() + PADDLE_WIDTH < x_pos + BALL_SIZE)
             {
-                xmax = pad->Getxpos() + PADDLE_WIDTH;
+                x_high = pad->Getxpos() + PADDLE_WIDTH;
             }
             else
             {
-                xmax = x_pos + BALL_SIZE;
+                x_high = x_pos + BALL_SIZE;
             }
 
-            float xsize = xmax - xmin;
+            float x_size = x_high - x_low;
 
-            if (xsize > ysize)
+            if (x_size > y_size)
             {
                 Mix_PlayChannel(-1, audio->paddle, 0);
-                y_pos -= ysize + 0.01f;
+                y_pos -= y_size + 0.01f;
                 int fix = abs(padcenter_x - ballcenter_x);
                 if(x_spd > 0)
                 {
@@ -153,18 +153,18 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Boa
             {
                 if (ballcenter_x < padcenter_x)
                 {
-                    x_pos -= xsize + 0.01f;
+                    x_pos -= x_size + 0.01f;
                     pad->input_left = false;
                     pad->input_right = false;
-                    BallResponse('L');
+                    BallResponse(LEFT);
                     return;
                 }
                 else
                 {
-                    x_pos += xsize + 0.01f;
+                    x_pos += x_size + 0.01f;
                     pad->input_right = false;
                     pad->input_left = false;
-                    BallResponse('R');
+                    BallResponse(RIGHT);
                     return;
                 }
             }
@@ -177,20 +177,20 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Boa
     {
         x_pos = SIDE_SIZE_X + 0.01f;
         if(x_spd < 0)
-            BallResponse('R');
+            BallResponse(RIGHT);
         return;
     }
     else if(x_pos + BALL_SIZE >= SCREEN_WIDTH - SIDE_SIZE_X)
     {
         x_pos = SCREEN_WIDTH - SIDE_SIZE_X - BALL_SIZE - 0.01f;
         if(x_spd > 0)
-            BallResponse('L');
+            BallResponse(LEFT);
         return;
     }
     else if(y_pos <= 0)
     {
         y_pos = 0.01f;
-        BallResponse('B');
+        BallResponse(BOTTOM);
         return;
     }
 
@@ -204,7 +204,7 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Boa
             if(row+i >= 0 && col+j >= 0
             && row+i < MAX_BRICK_Y && col+j < 12)
             {
-                if (brickdata[row+i][col+j].state > 0)
+                if (brickdata[row+i][col+j].state != NULL)
                 {
                     float brickcenter_x = brickdata[row+i][col+j].x_pos + 0.5f*BRICK_WIDTH;
                     float brickcenter_y = brickdata[row+i][col+j].y_pos + 0.5f*BRICK_HEIGHT;
@@ -215,78 +215,74 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Boa
                         y_pos + BALL_SIZE >= brickdata[row+i][col+j].y_pos)
                     {
                         board->Explosion(row+i, col+j, audio);
-                        float ymin = 0;
+                        float y_low = 0;
                         if (brickdata[row+i][col+j].y_pos > y_pos)
                         {
-                            ymin = brickdata[row+i][col+j].y_pos;
+                            y_low = brickdata[row+i][col+j].y_pos;
                         }
                         else
                         {
-                            ymin = y_pos;
+                            y_low = y_pos;
                         }
 
-                        float ymax = 0;
+                        float y_high = 0;
                         if (brickdata[row+i][col+j].y_pos + BRICK_HEIGHT < y_pos + BALL_SIZE)
                         {
-                            ymax = brickdata[row+i][col+j].y_pos + BRICK_HEIGHT;
+                            y_high = brickdata[row+i][col+j].y_pos + BRICK_HEIGHT;
                         }
                         else
                         {
-                            ymax = y_pos + BALL_SIZE;
+                            y_high = y_pos + BALL_SIZE;
                         }
 
-                        float ysize = ymax - ymin;
+                        float y_size = y_high - y_low;
 
-                        float xmin = 0;
+                        float x_low = 0;
                         if (brickdata[row+i][col+j].x_pos > x_pos)
                         {
-                            xmin = brickdata[row+i][col+j].x_pos;
+                            x_low = brickdata[row+i][col+j].x_pos;
                         }
                         else
                         {
-                            xmin = x_pos;
+                            x_low = x_pos;
                         }
 
-                        float xmax = 0;
+                        float x_high = 0;
                         if (brickdata[row+i][col+j].x_pos + BRICK_WIDTH < x_pos + BALL_SIZE)
                         {
-                            xmax = brickdata[row+i][col+j].x_pos + BRICK_WIDTH;
+                            x_high = brickdata[row+i][col+j].x_pos + BRICK_WIDTH;
                         }
                         else
                         {
-                            xmax = x_pos + BALL_SIZE;
+                            x_high = x_pos + BALL_SIZE;
                         }
 
-                        float xsize = xmax - xmin;
+                        float x_size = x_high - x_low;
 
-                        if (xsize > ysize)
+                        if (x_size > y_size)
                         {
                             if (ballcenter_y > brickcenter_y)
                             {
-                                // Bottom
-                                y_pos += ysize + 0.01f;
-                                BallResponse('B');
+                                y_pos += y_size + 0.01f;
+                                BallResponse(BOTTOM);
                             }
                             else
                             {
-                                // Top
-                                y_pos -= ysize + 0.01f;
-                                BallResponse('T');
+                                y_pos -= y_size + 0.01f;
+                                BallResponse(TOP);
                             }
                         }
                         else
                         {
                             if (ballcenter_x < brickcenter_x)
                             {
-                                // Left
-                                x_pos -= xsize + 0.01f;
-                                BallResponse('L');
+                                x_pos -= x_size + 0.01f;
+                                BallResponse(LEFT);
                             }
                             else
                             {
-                                // Right
-                                x_pos += xsize + 0.01f;
-                                BallResponse('R');
+                                x_pos += x_size + 0.01f;
+                                BallResponse(RIGHT);
                             }
                         }
                     }
@@ -296,11 +292,11 @@ void Ball::BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Boa
     }
 }
 
-void Ball::BallResponse(const char& direction)
+void Ball::BallResponse(const int& direction)
 {
     if (x_spd > 0) {
         if (y_spd > 0) {
-            if (direction == 'L' || direction == 'B')
+            if (direction == LEFT || direction == BOTTOM)
             {
                 x_spd = -x_spd;
             }
@@ -311,7 +307,7 @@ void Ball::BallResponse(const char& direction)
         }
         else if (y_spd < 0)
         {
-            if (direction == 'L' || direction == 'T')
+            if (direction == LEFT || direction == TOP)
             {
                 x_spd = -x_spd;
             }
@@ -324,7 +320,7 @@ void Ball::BallResponse(const char& direction)
     else if (x_spd < 0)
     {
         if (y_spd > 0) {
-            if (direction == 'R' || direction == 'B')
+            if (direction == RIGHT || direction == BOTTOM)
             {
                 x_spd = -x_spd;
             }
@@ -335,7 +331,7 @@ void Ball::BallResponse(const char& direction)
         }
         else if (y_spd < 0)
         {
-            if (direction == 'T' || direction == 'R')
+            if (direction == TOP || direction == RIGHT)
             {
                 x_spd = -x_spd;
             }

@@ -12,6 +12,9 @@ class Ball
 public:
     Ball();
     ~Ball();
+    enum direction {
+        TOP = 1, RIGHT = 2, BOTTOM = 3, LEFT = 4
+    };
     float BALL_SPEED;
     float x_spd;
     float y_spd;
@@ -23,7 +26,7 @@ public:
     void BallReset();
     void BallCollision(Paddle* pad, bool& is_quit, Brick_data** brickdata, Board* board, Audio* audio, int& life);
     void HandleInputAction(SDL_Event& event, SDL_Renderer* screen, Mix_Chunk* chunk);
-    void BallResponse(const char& direction);
+    void BallResponse(const int& direction);
 private:
     float x_pos;
     float y_pos;

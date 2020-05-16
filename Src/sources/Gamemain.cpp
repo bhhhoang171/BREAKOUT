@@ -6,64 +6,7 @@ int main(int argc, char* argv[])
     InitData();
     LoadGUI();
     Menu();
-
-    unsigned int time = 0;
-    while(true)
-    {
-        time = SDL_GetTicks();
-        SDL_SetRenderDrawColor(g_screen, 255, 255, 255, 255);
-        SDL_RenderClear(g_screen);
-        pictures->g_background.Render(g_screen);
-        pictures->sidepic.SetposRect(0, 0);
-        pictures->sidepic.Render(g_screen);
-        pictures->sidepic.SetposRect(SCREEN_WIDTH - SIDE_SIZE_X, 0);
-        pictures->sidepic.Render(g_screen);
-        board->Renderbackground(g_screen);
-        if(is_quit)
-        {
-            PlayAgain();
-            fp.open("data/highscore.txt");
-            fp >> highscore;
-            fp.close();
-        }
-        else
-        {
-            Game();
-            if(is_quit) continue;
-        }
-
-        pictures->heart.Render(g_screen);
-        g_text.SetColor(255, 255, 255);
-        g_text.Settext("Your score:");
-        g_text.LoadText(g_font, g_screen);
-        g_text.Render(g_screen, 830, 300);
-        g_text.Freettf();
-        g_text.Settext("High score:");
-        g_text.LoadText(g_font, g_screen);
-        g_text.Render(g_screen, 830, 100);
-        g_text.Freettf();
-        g_text.Settext(std::to_string(board->point*mul));
-        g_text.LoadText(g_font, g_screen);
-        g_text.Render(g_screen, 870, 330);
-        g_text.Freettf();
-        g_text.Settext(std::to_string(highscore*10));
-        g_text.LoadText(g_font, g_screen);
-        g_text.Render(g_screen, 870, 130);
-        g_text.Freettf();
-        g_text.Settext("x" + std::to_string(life));
-        g_text.LoadText(g_font, g_screen);
-        g_text.Render(g_screen, 885, 11);
-        g_text.Freettf();
-
-        SDL_RenderPresent(g_screen);
-        int real_time = SDL_GetTicks() - time;
-        int time_one_frame = 1000/FRAME_PER_SECOND;
-        if(real_time < time_one_frame)
-        {
-            int delay_time = time_one_frame - real_time;
-            SDL_Delay(delay_time);
-        }
-    }
+    Game();
     close();
     exit(0);
 }
@@ -209,7 +152,7 @@ void ChooseControl()
         }
         else if(g_event.type == SDL_KEYDOWN)
         {
-            if(g_event.key.keysym.sym = SDLK_ESCAPE)
+            if(g_event.key.keysym.sym == SDLK_ESCAPE)
             {
                 choosecontrol = false;
                 SetDifficulty();
@@ -387,6 +330,68 @@ void Difficulty(const float& padspeed, const float& ballspeed,
 }
 
 void Game()
+{
+    unsigned int time = 0;
+    while(true)
+    {
+        time = SDL_GetTicks();
+        SDL_SetRenderDrawColor(g_screen, 255, 255, 255, 255);
+        SDL_RenderClear(g_screen);
+        pictures->g_background.Render(g_screen);
+        pictures->sidepic.SetposRect(0, 0);
+        pictures->sidepic.Render(g_screen);
+        pictures->sidepic.SetposRect(SCREEN_WIDTH - SIDE_SIZE_X, 0);
+        pictures->sidepic.Render(g_screen);
+        board->Renderbackground(g_screen);
+        if(is_quit)
+        {
+            PlayAgain();
+            fp.open("data/highscore.txt");
+            fp >> highscore;
+            fp.close();
+        }
+        else
+        {
+            PlayGame();
+            if(is_quit) continue;
+        }
+
+        pictures->heart.Render(g_screen);
+        g_text.SetColor(255, 255, 255);
+        g_text.Settext("Your score:");
+        g_text.LoadText(g_font, g_screen);
+        g_text.Render(g_screen, 830, 300);
+        g_text.Freettf();
+        g_text.Settext("High score:");
+        g_text.LoadText(g_font, g_screen);
+        g_text.Render(g_screen, 830, 100);
+        g_text.Freettf();
+        g_text.Settext(std::to_string(board->point*mul));
+        g_text.LoadText(g_font, g_screen);
+        g_text.Render(g_screen, 870, 330);
+        g_text.Freettf();
+        g_text.Settext(std::to_string(highscore*10));
+        g_text.LoadText(g_font, g_screen);
+        g_text.Render(g_screen, 870, 130);
+        g_text.Freettf();
+        g_text.Settext("x" + std::to_string(life));
+        g_text.LoadText(g_font, g_screen);
+        g_text.Render(g_screen, 885, 11);
+        g_text.Freettf();
+
+        SDL_RenderPresent(g_screen);
+        int real_time = SDL_GetTicks() - time;
+        int time_one_frame = 1000/FRAME_PER_SECOND;
+        if(real_time < time_one_frame)
+        {
+            int delay_time = time_one_frame - real_time;
+            SDL_Delay(delay_time);
+        }
+    }
+    return;
+}
+
+void PlayGame()
 {
     if(board->brickcount == 0)
     {

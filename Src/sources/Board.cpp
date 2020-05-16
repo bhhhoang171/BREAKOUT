@@ -56,23 +56,23 @@ void Board::DrawBoard(SDL_Renderer* screen)
         {
             switch(brickdata[i][j].state)
             {
-            case 1:
+            case NORMAL:
                 brickpic.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos);
                 brickpic.Render(screen);
                 break;
-            case 2:
+            case ICE:
                 ice.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos);
                 ice.Render(screen);
                 break;
-            case 3:
+            case BOMB:
                 bomb.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos);
                 bomb.Render(screen);
                 break;
-            case 4:
+            case HORIZONTAL_ARROW:
                 arrowhor.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos);
                 arrowhor.Render(screen);
                 break;
-            case 5:
+            case VERTICAL_ARROW:
                 arrowver.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos);
                 arrowver.Render(screen);
                 break;
@@ -95,23 +95,23 @@ void Board::DrawBoard1(SDL_Renderer* screen, const Picture& ball, const Picture&
             {
                 switch(brickdata[i][j].state)
                 {
-                case 1:
+                case NORMAL:
                     brickpic.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos - frame*2);
                     brickpic.Render(screen);
                     break;
-                case 2:
+                case ICE:
                     ice.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos - frame*2);
                     ice.Render(screen);
                     break;
-                case 3:
+                case BOMB:
                     bomb.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos - frame*2);
                     bomb.Render(screen);
                     break;
-                case 4:
+                case HORIZONTAL_ARROW:
                     arrowhor.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos - frame*2);
                     arrowhor.Render(screen);
                     break;
-                case 5:
+                case VERTICAL_ARROW:
                     arrowver.SetposRect(brickdata[i][j].x_pos, brickdata[i][j].y_pos - frame*2);
                     arrowver.Render(screen);
                     break;
@@ -132,18 +132,18 @@ void Board::Reset()
         {
             if(i >= MAX_BRICK_RESET_Y)
             {
-                 brickdata[i][j].state = 0;
+                 brickdata[i][j].state = NULL;
             }
-            else brickdata[i][j].state = 1;
+            else brickdata[i][j].state = NORMAL;
         }
     }
     while(bombcount > 0)
     {
         int i = rand() % 10;
         int j = rand() % 12;
-        if(brickdata[i][j].state == 1)
+        if(brickdata[i][j].state == NORMAL)
         {
-            brickdata[i][j].state = 3;
+            brickdata[i][j].state = BOMB;
             bombcount--;
         }
     }
@@ -151,9 +151,9 @@ void Board::Reset()
     {
         int i = rand() % 10;
         int j = rand() % 12;
-        if(brickdata[i][j].state == 1)
+        if(brickdata[i][j].state == NORMAL)
         {
-            brickdata[i][j].state = 2;
+            brickdata[i][j].state = ICE;
             icecount--;
         }
     }
@@ -161,9 +161,9 @@ void Board::Reset()
     {
         int i = rand() % 10;
         int j = rand() % 12;
-        if(brickdata[i][j].state == 1)
+        if(brickdata[i][j].state == NORMAL)
         {
-            brickdata[i][j].state = 4;
+            brickdata[i][j].state = HORIZONTAL_ARROW;
             horcount--;
         }
     }
@@ -171,9 +171,9 @@ void Board::Reset()
     {
         int i = rand() % 10;
         int j = rand() % 12;
-        if(brickdata[i][j].state == 1)
+        if(brickdata[i][j].state == NORMAL)
         {
-            brickdata[i][j].state = 5;
+            brickdata[i][j].state = HORIZONTAL_ARROW;
             vercount--;
         }
     }
@@ -181,9 +181,9 @@ void Board::Reset()
 
 void Board::Explosion(const int& row, const int& col, Audio* audio)
 {
-    if(brickdata[row][col].state == 3)
+    if(brickdata[row][col].state == BOMB)
     {
-        brickdata[row][col].state = 0;
+        brickdata[row][col].state = NULL;
         brickcount--;
         point++;
         Mix_PlayChannel(-1, audio->explo, 0);
@@ -201,23 +201,23 @@ void Board::Explosion(const int& row, const int& col, Audio* audio)
                 }
             }
     }
-    else if(brickdata[row][col].state == 1)
+    else if(brickdata[row][col].state == NORMAL)
     {
-        brickdata[row][col].state = 0;
+        brickdata[row][col].state = NULL;
         brickcount--;
         point++;
         Mix_PlayChannel(-1, audio->score, 0);
         return;
     }
-    else if(brickdata[row][col].state == 2)
+    else if(brickdata[row][col].state == ICE)
     {
-        brickdata[row][col].state = 1;
+        brickdata[row][col].state = NORMAL;
         Mix_PlayChannel(-1, audio->icebreak, 0);
         return;
     }
-    else if(brickdata[row][col].state == 4)
+    else if(brickdata[row][col].state == HORIZONTAL_ARROW)
     {
-        brickdata[row][col].state = 0;
+        brickdata[row][col].state = NULL;
         brickcount--;
         point++;
         Mix_PlayChannel(-1, audio->explo, 0);
@@ -229,9 +229,9 @@ void Board::Explosion(const int& row, const int& col, Audio* audio)
             }
         }
     }
-    else if(brickdata[row][col].state == 5)
+    else if(brickdata[row][col].state == VERTICAL_ARROW)
     {
-        brickdata[row][col].state = 0;
+        brickdata[row][col].state = NULL;
         brickcount--;
         point++;
         Mix_PlayChannel(-1, audio->explo, 0);
@@ -243,7 +243,7 @@ void Board::Explosion(const int& row, const int& col, Audio* audio)
             }
         }
     }
-    else if(brickdata[row][col].state == 0)
+    else if(brickdata[row][col].state == NULL)
         return;
 }
 
@@ -265,21 +265,21 @@ void Board::Updateboard(SDL_Renderer* screen, const Picture& ball, const Picture
             int r = rand() % 30;
             if(r == 2 || r == 6 || r == 10 || r == 14 || r == 13)
             {
-                brickdata[0][j].state = 2;
+                brickdata[0][j].state = ICE;
             }
             else if(r == 3 || r == 5)
             {
-                brickdata[0][j].state = 3;
+                brickdata[0][j].state = BOMB;
             }
             else if(r == 1)
             {
-                brickdata[0][j].state = 4;
+                brickdata[0][j].state = HORIZONTAL_ARROW;
             }
             else if(r == 0)
             {
-                brickdata[0][j].state = 5;
+                brickdata[0][j].state = VERTICAL_ARROW;
             }
-            else brickdata[0][j].state = 1;
+            else brickdata[0][j].state = NORMAL;
         }
         DrawBoard1(screen, ball, pad);
     }

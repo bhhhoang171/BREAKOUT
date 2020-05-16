@@ -43,7 +43,8 @@ void Difficulty(const float& padspeed, const float& ballspeed,
                 const int& mul_, const int& life_);
 void ChooseControl();
 void Control(const bool& mouse);
-void PlayAgain();
 void Game();
+void PlayAgain();
+void PlayGame();
 
 #endif
