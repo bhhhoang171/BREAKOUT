@@ -20,4 +20,5 @@ New features of game:
 -When the bricks < 80, the board will be updated (a row will be added to board).
 -When playing game you can press P to pause the game or press Esc to return Menu.
 
+Images and sound was taken from https://opengameart.org/
 DEMO: https://www.youtube.com/watch?v=QvDJk_rTvbw
